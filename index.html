@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>#StackTheBits</title>
+    <title>TheAlpha.Quest</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans&display=swap');
         
@@ -30,10 +30,47 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             padding: 20px;
             flex-direction: column;
+            position: relative; /* For positioning of blurred background */
+        }
+        #blur-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            filter: blur(5px);
+            display: none;
+            z-index: 10;
+        }
+        #title {
+            font-size: 48px; /* Font size for the title */
+            color: #FE5F03; /* Color for the title */
+            margin-bottom: 20px;
+            font-family: 'Pixelify Sans', sans-serif;
         }
         #message {
             font-size: 24px; /* Large font for motivational messages */
             color: #FE5F03; /* Color for motivational messages */
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #countdown {
+            font-size: 36px; /* Large font for countdown timer */
+            color: #FE5F03; /* Color for countdown timer */
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #total-bits {
+            font-size: 16px;
+            background-color: #fff;
+            padding: 5px 10px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             margin-bottom: 10px;
         }
         #progress-container {
@@ -52,25 +89,44 @@
             height: 0; /* Initial height of the progress bar */
             transition: background-color 0.3s, height 0.3s;
         }
+        #grid-wall {
+            display: grid;
+            grid-template-columns: repeat(10, 14px);
+            grid-gap: 1px;
+            margin-bottom: 10px;
+            width: 140px;
+            height: 140px;
+        }
+        .bit {
+            width: 14px;
+            height: 13px;
+            background-color: #FE5F03; /* Orange color for bits */
+        }
+        .wall-bit {
+            background-color: #888; /* Initial color of wall bits */
+        }
         #wall-container {
             display: flex;
             flex-direction: column;
             align-items: center;
         }
-        #total-bits {
-            font-size: 16px;
-            background-color: #fff;
-            padding: 5px 10px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            margin-bottom: 10px;
-        }
         #wall {
-            width: 100px;
-            height: 100px;
+            width: 150px; /* Increased size for click area */
+            height: 150px; /* Increased size for click area */
             background-size: cover;
             cursor: pointer;
             margin-bottom: 20px;
+            border: 2px solid #FE5F03; /* Border to highlight click area */
+            padding: 10px;
+            transition: transform 0.1s, box-shadow 0.1s;
+        }
+        #wall:hover {
+            transform: scale(1.05); /* Slightly increase size on hover */
+            box-shadow: 0 0 10px #FE5F03; /* Add shadow on hover */
+        }
+        #wall:active {
+            transform: scale(0.95); /* Slightly decrease size on click */
+            box-shadow: 0 0 5px #FE5F03; /* Reduce shadow on click */
         }
         #grid-container {
             display: grid;
@@ -78,15 +134,68 @@
             grid-gap: 1px;
             justify-content: center;
         }
-        .bit {
-            width: 14px;
-            height: 13px;
+        #energy-module {
+            width: 320px;
+            background-color: #1f1f1f;
+            border-radius: 5px;
+            padding: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            margin-top: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        #energy-container {
+            width: 300px;
+            height: 20px;
+            background-color: #ddd;
+            border-radius: 5px;
+            overflow: hidden;
+            position: relative;
+            margin-bottom: 10px;
+        }
+        #energy-bar {
+            height: 100%;
+            width: 100%;
+            background-color: #00FF7F;
+            transition: width 0.3s, background-color 0.3s;
+        }
+        #energy-icon {
+            position: absolute;
+            top: -15px;
+            left: -25px;
+            font-size: 24px;
+            color: #FE5F03;
+        }
+        .placeholder {
+            width: 100px;
+            height: 40px;
+            background-color: #fff;
+            padding: 5px 10px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin: 5px;
+            display: inline-block;
+        }
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+        .icon {
+            width: 24px;
+            height: 24px;
+            margin-right: 10px;
         }
     </style>
 </head>
 <body>
+    <div id="blur-overlay"></div>
     <div id="game">
+        <div id="title">TheAlpha.Quest</div>
+        <div id="grid-wall"></div>
         <div id="message"></div>
+        <div id="countdown"></div>
         <div id="total-bits">Total Bits: 0</div>
         <div id="progress-container">
             <div id="progress-bar" class="progress-bar"></div>
@@ -94,6 +203,17 @@
         <div id="wall-container">
             <div id="wall"></div>
             <div id="grid-container"></div>
+        </div>
+        <div id="energy-module">
+            <div id="energy-container">
+                <div id="energy-bar"></div>
+                <div id="energy-icon">⚡</div>
+            </div>
+        </div>
+        <div class="button-container" id="button-container">
+            <div class="placeholder">🟧Action</div>
+            <div class="placeholder">🟣Quest</div>
+            <div class="placeholder">❎Synergy</div>
         </div>
     </div>
     <script src="script.js"></script>
