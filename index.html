@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#StackTheBits</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans&display=swap');
+        
+        body {
+            font-family: 'Pixelify Sans', sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background-color: #222222; /* General background color */
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        #game {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 80vh;
+            width: 90vw;
+            max-width: 600px;
+            background-color: #161616; /* Module box background color */
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            flex-direction: column;
+        }
+        #message {
+            font-size: 24px; /* Large font for motivational messages */
+            color: #FE5F03; /* Color for motivational messages */
+            margin-bottom: 10px;
+        }
+        #progress-container {
+            width: 20px;
+            height: 300px;
+            background-color: #ddd;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-right: 10px;
+            display: flex;
+            flex-direction: column-reverse;
+        }
+        .progress-bar {
+            width: 100%;
+            background-color: #76c7c0;
+            height: 0; /* Initial height of the progress bar */
+            transition: background-color 0.3s, height 0.3s;
+        }
+        #wall-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        #total-bits {
+            font-size: 16px;
+            background-color: #fff;
+            padding: 5px 10px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 10px;
+        }
+        #wall {
+            width: 100px;
+            height: 100px;
+            background-size: cover;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+        #grid-container {
+            display: grid;
+            grid-template-columns: repeat(10, 14px);
+            grid-gap: 1px;
+            justify-content: center;
+        }
+        .bit {
+            width: 14px;
+            height: 13px;
+        }
+    </style>
+</head>
+<body>
+    <div id="game">
+        <div id="message"></div>
+        <div id="total-bits">Total Bits: 0</div>
+        <div id="progress-container">
+            <div id="progress-bar" class="progress-bar"></div>
+        </div>
+        <div id="wall-container">
+            <div id="wall"></div>
+            <div id="grid-container"></div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
