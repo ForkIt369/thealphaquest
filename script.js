@@ -29,16 +29,16 @@ const clicksNeededSequences = [
 ];
 
 const motivationalMessages = [
-    'Keep going! 😄',
-    'Keep running up that hill! 🏃‍♂️',
-    'You got this! 💪',
-    'Almost there! 🚀',
-    'Break through! 💥',
-    'Smash it! 🏆',
-    'Great job! 🎉',
-    'Keep it up! 👍',
-    'You\'re amazing! 🌟',
-    'Fantastic effort! 👏'
+    'Break the walls! 💥',
+    'Getting louder and louder! 🔊',
+    'Bit by bit, piece by piece! 🔨',
+    'Tear it down! 🏗️',
+    'You got this, break it! 💪',
+    'Walls are meant to be broken! 🚧',
+    'Keep breaking, keep building! 🏗️',
+    'Bit by bit, you\'re unstoppable! 🌟',
+    'Smash those walls! 🧱',
+    'Louder and prouder! 🎉'
 ];
 
 function updateWall() {
