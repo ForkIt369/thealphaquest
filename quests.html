@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quests</title>
+    <style>
+        body {
+            font-family: 'Pixelify Sans', sans-serif;
+            background-color: #262626; /* General background color */
+            color: #FFF4E1; /* Text color */
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        #quests {
+            width: 90vw;
+            max-width: 600px;
+        }
+        .quest {
+            background-color: #161616; /* Module box background color */
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5); /* Enhanced shadow */
+            padding: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .quest-name {
+            color: #763AF2; /* Quest name color */
+        }
+        .quest-bits {
+            color: #763AF2; /* Violet bits color */
+        }
+    </style>
+</head>
+<body>
+    <h1>Quests</h1>
+    <div id="quests">
+        <!-- Quest modules will be dynamically added here -->
+    </div>
+    <script>
+        const questsContainer = document.getElementById('quests');
+        const quests = [
+            'Quest Alpha', 'Quest Beta', 'Quest Gamma', 'Quest Delta',
+            'Quest Epsilon', 'Quest Zeta', 'Quest Eta', 'Quest Theta',
+            'Quest Iota', 'Quest Kappa', 'Quest Lambda', 'Quest Mu'
+        ];
+
+        quests.forEach((quest, index) => {
+            const questElement = document.createElement('div');
+            questElement.classList.add('quest');
+            questElement.innerHTML = `
+                <div class="quest-name">${quest}</div>
+                <div class="quest-bits">${Math.floor(Math.random() * 100 + 1)} AQ</div>
+            `;
+            questsContainer.appendChild(questElement);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaderboard</title>
+    <style>
+        body {
+            font-family: 'Pixelify Sans', sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background-color: #000000; /* General background color */
+            color: #FFF4E1; /* Text color */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        #leaderboard {
+            background-color: #1E1D1D; /* Leaderboard background color */
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5); /* Enhanced shadow */
+            padding: 20px;
+            width: 90vw;
+            max-width: 600px;
+        }
+        h1 {
+            color: #FE5F03; /* Title color */
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #393939; /* Header background color */
+        }
+        tr:nth-child(even) {
+            background-color: #313130; /* Even row background color */
+        }
+        .earned-bits {
+            color: #3EB85F; /* Green hue for earned bits */
+        }
+    </style>
+</head>
+<body>
+    <div id="leaderboard">
+        <h1>Leaderboard</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Player</th>
+                    <th>Bits Mined</th>
+                    <th>Bits Earned (25%)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Player1</td>
+                    <td>100</td>
+                    <td class="earned-bits">25</td>
+                </tr>
+                <tr>
+                    <td>Player2</td>
+                    <td>150</td>
+                    <td class="earned-bits">37.5</td>
+                </tr>
+                <tr>
+                    <td>Player3</td>
+                    <td>200</td>
+                    <td class="earned-bits">50</td>
+                </tr>
+                <tr>
+                    <td>Player4</td>
+                    <td>250</td>
+                    <td class="earned-bits">62.5</td>
+                </tr>
+                <tr>
+                    <td>Player5</td>
+                    <td>300</td>
+                    <td class="earned-bits">75</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

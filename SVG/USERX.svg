@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="21px" height="20px" viewBox="0 0 21 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Shape</title>
+    <g id="Page-2" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="USERX" transform="translate(0, 0)" fill="#63B669">
+            <path d="M10,0 L16,0 L16,2 L10.0002,2 L10.0002,7.99995 L8.0002,7.99995 L8.0002,1.99995 L10,1.99995 L10,0 Z M10,8 L16,8 L16,10 L10,10 L10,8 Z M18.0002,1.99995 L16.0002,1.99995 L16.0002,7.99995 L18.0002,7.99995 L18.0002,1.99995 Z M5,13.9999 L5,18 L5,19.9999 L5,20 L21,20 L21,19.9999 L21.0002,19.9999 L21.0002,13.9999 L19.0002,13.9999 L19.0002,18 L7,18 L7,14 L19,14 L19,12 L7,12 L7,13.9999 L5,13.9999 Z M4,8 L2,8 L2,6 L0,6 L0,8 L2,8 L2,10 L0,10 L0,12 L2,12 L2,10 L4,10 L4,12 L6,12 L6,10 L4,10 L4,8 Z M4,8 L6,8 L6,6 L4,6 L4,8 Z" id="Shape"></path>
+        </g>
+    </g>
+</svg>
