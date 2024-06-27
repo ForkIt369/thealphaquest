@@ -1,7 +1,7 @@
 import os
+from flask import Flask, request
 from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
-from flask import Flask, request
 from sqlalchemy import create_engine, Column, Integer, String, Date
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
@@ -28,6 +28,10 @@ Session = sessionmaker(bind=engine)
 session = Session()
 
 app = Flask(__name__)
+
+@app.route('/')
+def index():
+    return 'Hello, this is a web app!'
 
 @app.route(f'/{TOKEN}', methods=['POST'])
 def webhook():
