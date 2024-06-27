@@ -1,101 +1,59 @@
 import os
-from flask import Flask, request, jsonify
-from telegram import Update
-from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
-from sqlalchemy import create_engine, Column, Integer, String, Date
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
-from datetime import datetime, timedelta
-
-TOKEN = os.getenv('TELEGRAM_TOKEN')
-APP_URL = f'https://{os.getenv("HEROKU_APP_NAME")}.herokuapp.com/{TOKEN}'
-
-engine = create_engine('sqlite:///users.db')
-Base = declarative_base()
-
-class User(Base):
-    __tablename__ = 'users'
-    id = Column(Integer, primary_key=True)
-    username = Column(String)
-    telegram_id = Column(Integer, unique=True)
-    score = Column(Integer, default=0)
-    last_login = Column(Date)
-    streak = Column(Integer, default=0)
-    hearts = Column(Integer, default=0)
-
-Base.metadata.create_all(engine)
-Session = sessionmaker(bind=engine)
-session = Session()
+from flask import Flask, render_template, redirect, url_for, flash, request
+from flask_sqlalchemy import SQLAlchemy
+from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = 'your_secret_key'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
+db = SQLAlchemy(app)
+login_manager = LoginManager(app)
+login_manager.login_view = 'login'
+
+class User(UserMixin, db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(150), unique=True, nullable=False)
+    password = db.Column(db.String(150), nullable=False)
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
 
 @app.route('/')
+@login_required
 def index():
-    return 'Hello, this is a web app!'
+    return render_template('index.html', name=current_user.email)
 
-@app.route(f'/{TOKEN}', methods=['POST'])
-def webhook():
-    update = Update.de_json(request.get_json(), application.bot)
-    application.update_queue.put(update)
-    return 'ok'
-
-async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    user = update.message.from_user
-    existing_user = session.query(User).filter_by(telegram_id=user.id).first()
-
-    if not existing_user:
-        new_user = User(
-            username=user.username,
-            telegram_id=user.id,
-            last_login=datetime.now().date()
-        )
-        session.add(new_user)
-        session.commit()
-        await update.message.reply_text(f"Welcome {user.username}! You have started your journey with 0 score.")
-    else:
-        await update.message.reply_text(f"Welcome back {user.username}! Your current score is {existing_user.score}.")
-
-async def check_in(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    user = update.message.from_user
-    existing_user = session.query(User).filter_by(telegram_id=user.id).first()
-
-    if existing_user:
-        today = datetime.now().date()
-        if existing_user.last_login == today:
-            await update.message.reply_text("You have already checked in today.")
-            return
-
-        if existing_user.last_login == today - timedelta(days=1):
-            existing_user.streak += 1
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        email = request.form.get('email')
+        password = request.form.get('password')
+        user = User.query.filter_by(email=email).first()
+        if user and user.password == password:
+            login_user(user)
+            return redirect(url_for('index'))
         else:
-            existing_user.streak = 1
+            flash('Login Unsuccessful. Please check email and password', 'danger')
+    return render_template('login.html')
 
-        existing_user.last_login = today
-        existing_user.score += 10 * existing_user.streak  # Example scoring
-        session.commit()
-        await update.message.reply_text(f"Checked in! Your current streak is {existing_user.streak}. Your score is {existing_user.score}.")
-    else:
-        await update.message.reply_text("You need to start first. Use /start to register.")
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        email = request.form.get('email')
+        password = request.form.get('password')
+        user = User(email=email, password=password)
+        db.session.add(user)
+        db.session.commit()
+        flash('Your account has been created!', 'success')
+        return redirect(url_for('login'))
+    return render_template('register.html')
 
-async def invite(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    user = update.message.from_user
-    invite_link = f"https://t.me/thealphaquest_bot?start={user.id}"
-    await update.message.reply_text(f"Invite your friends using this link: {invite_link}")
-
-def main():
-    global application
-    application = ApplicationBuilder().token(TOKEN).build()
-
-    application.add_handler(CommandHandler("start", start))
-    application.add_handler(CommandHandler("checkin", check_in))
-    application.add_handler(CommandHandler("invite", invite))
-
-    application.run_webhook(
-        listen="0.0.0.0",
-        port=int(os.environ.get('PORT', 5000)),
-        url_path=TOKEN,
-        webhook_url=APP_URL
-    )
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('login'))
 
 if __name__ == '__main__':
-    main()
+    app.run(debug=True)
