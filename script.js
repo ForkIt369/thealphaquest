@@ -2,17 +2,26 @@ let clicks = 0;
 let level = 0;
 let phase = 0;
 let totalBits = 0;
+let totalTQ = 0;
 let energy = 100;
 let isPlaying = false;
 let isCoolingDown = false;
 let lastClickTime = Date.now();
-let hearts = 3; // Initialize with 3 hearts
-let selectedPowerUp = null;
+let hearts = 0;
+let maxBitsPerDay = 800;
+let bitsCollectedToday = 0;
+let invitedFriendsBits = 0; // Total bits collected by invited friends
+let infiniteEnergy = false;
+let doublePower = false;
+let quadPower = false;
+
+const bitsPerTQ = 150;
 
 const wall = document.getElementById('wall');
 const gridContainer = document.getElementById('grid-container');
 const progressBar = document.getElementById('progress-bar');
 const totalBitsDisplay = document.getElementById('total-bits');
+const totalTQDisplay = document.getElementById('total-tq');
 const messageDisplay = document.getElementById('message');
 const countdownDisplay = document.getElementById('countdown');
 const energyBar = document.getElementById('energy-bar');
@@ -20,22 +29,6 @@ const blurOverlay = document.getElementById('blur-overlay');
 const gridWall = document.getElementById('grid-wall');
 const buttonContainer = document.getElementById('button-container');
 const heartsContainer = document.getElementById('hearts-container');
-const questsContainer = document.getElementById('quests');
-const synergyBoardModal = document.getElementById('synergyboard-modal');
-const inviteModal = document.getElementById('invite-modal');
-const dailyLeaderboard = document.getElementById('daily-leaderboard');
-const allTimeLeaderboard = document.getElementById('all-time-leaderboard');
-const alphaquestersLeaderboard = document.getElementById('alphaquesters-leaderboard');
-const hamstersLeaderboard = document.getElementById('hamsters-leaderboard');
-const nothingLeaderboard = document.getElementById('nothing-leaderboard');
-const stonfiLeaderboard = document.getElementById('stonfi-leaderboard');
-const evaaLeaderboard = document.getElementById('evaa-leaderboard');
-const stormLeaderboard = document.getElementById('storm-leaderboard');
-const xircusLeaderboard = document.getElementById('xircus-leaderboard');
-const dedustLeaderboard = document.getElementById('dedust-leaderboard');
-const resistancedogsLeaderboard = document.getElementById('resistancedogs-leaderboard');
-const bemoLeaderboard = document.getElementById('bemo-leaderboard');
-const tonpunksLeaderboard = document.getElementById('tonpunks-leaderboard');
 
 const wallSequences = [
     ['SVG/human-run.svg', 'SVG/human-handsdown.svg', 'SVG/human.svg', 'SVG/human-handsup.svg'],
@@ -87,15 +80,15 @@ const motivationalMessages = [
     'Where is the love? Where is the SYNERGY!', 'Is this real life or is this just fantasy?',
     'Keep breaking - i need to google some fun facts to keep you going.', 'Breaky breaky breaky breakfast', 
     'Once upon a time there was a wall. and then there wasnt.', 'Every BIT helps!', 
-    '1 Bit 2 Bit 4 Bit BREAK THE WALL'
+    '1 Bit 2 Bit 4 Bit BREAK THE WALL', 'You are only responsible for your intentions. Now BREAK THE WALL!', 'Stop Reading. Start breaking!', 'Take a Break. Sorry.'
 ];
 
 function updateWall() {
     const svgFile = wallSequences[phase % wallSequences.length][level];
     wall.innerHTML = `<img src="${svgFile}" class="wall-svg" />`;
     const svgElement = wall.querySelector('.wall-svg');
-    svgElement.style.width = '100%'; // Ensure it fills the container
-    svgElement.style.height = '100%'; // Ensure it fills the container
+    svgElement.style.width = '100%';
+    svgElement.style.height = '100%';
 }
 
 function updateProgressBar() {
@@ -108,9 +101,9 @@ function updateProgressBar() {
 function updateEnergyBar() {
     energyBar.style.width = energy + '%';
     if (energy > 50) {
-        energyBar.style.backgroundColor = '#3EB85F'; // Updated energy bar color for high energy
+        energyBar.style.backgroundColor = '#3EB85F';
     } else if (energy > 20) {
-        energyBar.style.backgroundColor = '#FE5F03'; // Updated energy bar color for medium energy
+        energyBar.style.backgroundColor = '#FE5F03';
     } else {
         energyBar.style.backgroundColor = '#FF0000';
     }
@@ -154,13 +147,21 @@ function explodeBits() {
 
 function showMotivationalMessage() {
     const message = motivationalMessages[Math.floor(Math.random() * motivationalMessages.length)];
-    const fontSize = Math.random() > 0.5 ? '24px' : '36px'; // Randomly larger font size
+    const fontSize = Math.random() > 0.5 ? '24px' : '36px';
     messageDisplay.style.fontSize = fontSize;
     messageDisplay.innerHTML = `<img src="SVG/eye.svg" class="icon" /> ${message}`;
 }
 
 function updateTotalBits() {
     totalBitsDisplay.textContent = `Total Bits: ${totalBits}`;
+}
+
+function updateTotalTQ() {
+    totalTQDisplay.textContent = `$TQ: ${totalTQ}`;
+    totalTQDisplay.classList.add('enlarge');
+    setTimeout(() => {
+        totalTQDisplay.classList.remove('enlarge');
+    }, 500);
 }
 
 function startCountdown() {
@@ -184,7 +185,7 @@ function startCountdown() {
 function startCooldownTimer() {
     isPlaying = false;
     isCoolingDown = true;
-    let cooldown = 16; // Changed cooldown timer to 16 seconds
+    let cooldown = 16;
     blurOverlay.style.display = 'block';
     countdownDisplay.textContent = `Cooldown: ${cooldown}s`;
     buttonContainer.style.display = 'flex';
@@ -272,15 +273,39 @@ function showSquad(squadId) {
 }
 
 function showInviteLink() {
-    openModal('invite-modal');
+    alert('Invite a friend and both of you will receive a heart. This heart will increase your bit limit for the day!');
+    // Implementation of invite logic here
 }
 
 function initialize() {
     wall.addEventListener('click', () => {
         if (!isPlaying || isCoolingDown) return;
+        if (bitsCollectedToday >= maxBitsPerDay) {
+            alert("You've reached the maximum bits you can collect today.");
+            return;
+        }
+
+        let bitsPerClick = 1;
+        if (doublePower) bitsPerClick *= 2;
+        if (quadPower) bitsPerClick *= 4;
+
+        totalBits += bitsPerClick;
+        bitsCollectedToday += bitsPerClick;
+        if (totalBits >= bitsPerTQ * (totalTQ + 1)) {
+            totalTQ += 1;
+            updateTotalTQ();
+        }
+        updateTotalBits();
+
+        if (!infiniteEnergy) {
+            energy -= 1;
+            if (energy <= 0) {
+                shakeAndBlur();
+                startCooldownTimer();
+            }
+        }
+
         clicks++;
-        totalBits++;
-        energy--;
         lastClickTime = Date.now();
         updateEnergyBar();
         removeWallBit();
@@ -292,120 +317,33 @@ function initialize() {
                 explodeBits();
                 level = 0;
                 phase++;
-                hearts--; // Lose one heart per sequence
-                updateHearts();
+                if (hearts > 0) {
+                    hearts--;
+                    updateHearts();
+                }
             }
-        }
-        if (energy <= 0) {
-            shakeAndBlur();
-            startCooldownTimer();
         }
         if (gridContainer.children.length < 100) {
             addBit();
         }
         updateWall();
         updateProgressBar();
-        updateTotalBits();
     });
 
-    // Initially start the countdown
     startCountdown();
-
-    // Replenish energy every second
     setInterval(replenishEnergy, 1000);
-
-    // Initialize the wall grid
     resetWall();
-
-    // Initialize hearts
     updateHearts();
+}
 
-    // Initialize quests
-    const quests = [
-        {
-            name: 'Daily Check-in',
-            description: 'Check-in daily to receive a heart power-up.',
-            reward: 'Heart Power-Up',
-            action: () => {
-                alert('You received a Heart Power-Up!');
-                hearts = Math.min(hearts + 1, 12);
-                updateHearts();
-            }
-        },
-        {
-            name: '7-Day Streak',
-            description: 'Check-in 7 days in a row to receive a heart bonus.',
-            reward: 'Heart Bonus',
-            locked: true
-        }
-    ];
-
-    quests.forEach(quest => {
-        const questElement = document.createElement('div');
-        questElement.classList.add('quest');
-        questElement.innerHTML = `
-            <div class="quest-name">${quest.name}</div>
-            <div class="quest-bits">${quest.reward}</div>
-        `;
-        questElement.addEventListener('click', () => {
-            if (quest.action && !quest.locked) {
-                quest.action();
-            } else if (quest.locked) {
-                alert('This quest is locked.');
-            }
-        });
-        questsContainer.appendChild(questElement);
-    });
-
-    // Initialize leaderboard
-    const users = Array.from({ length: 40 }, (_, i) => `@user${i + 1}`);
-    users.forEach((user, index) => {
-        const bits = Math.floor(Math.random() * 1000 + 1);
-        const synergyBits = Math.ceil(bits * 0.25);
-        const userElement = document.createElement('div');
-        userElement.classList.add('leaderboard-user');
-        userElement.innerHTML = `
-            <div class="user-name">${user}</div>
-            <div class="earned-bits">${bits}</div>
-            <div class="synergy-bits">${synergyBits}</div>
-        `;
-        dailyLeaderboard.appendChild(userElement);
-        allTimeLeaderboard.appendChild(userElement.cloneNode(true));
-    });
-
-    // Initialize squads
-    const squads = {
-        alphaquesters: [],
-        hamsters: [],
-        nothing: [],
-        stonfi: [],
-        evaa: [],
-        storm: [],
-        xircus: [],
-        dedust: [],
-        resistancedogs: [],
-        bemo: [],
-        tonpunks: []
-    };
-    Object.keys(squads).forEach(squad => {
-        squads[squad] = Array.from({ length: 100 }, (_, i) => ({
-            user: `@${squad}_user${i + 1}`,
-            bits: Math.floor(Math.random() * 1000 + 1)
-        }));
-    });
-
-    Object.entries(squads).forEach(([squad, users]) => {
-        users.forEach(user => {
-            const userElement = document.createElement('div');
-            userElement.classList.add('leaderboard-user');
-            userElement.innerHTML = `
-                <div class="user-name">${user.user}</div>
-                <div class="earned-bits">${user.bits}</div>
-                <div class="synergy-bits">${Math.ceil(user.bits * 0.25)}</div>
-            `;
-            document.getElementById(`${squad}-leaderboard`).appendChild(userElement);
-        });
-    });
+function inviteFriend() {
+    if (hearts < 3) {
+        hearts++;
+        updateHearts();
+        alert('Friend invited! You have received a heart.');
+    } else {
+        alert('You already have the maximum number of hearts.');
+    }
 }
 
 function startGame() {
@@ -414,26 +352,75 @@ function startGame() {
 }
 
 function selectPowerUp(powerUp) {
-    if (selectedPowerUp) {
-        alert('You already have a power-up active.');
-        return;
+    switch (powerUp) {
+        case 'InfiniteEnergy':
+            infiniteEnergy = !infiniteEnergy;
+            break;
+        case 'DoublePower':
+            doublePower = !doublePower;
+            break;
+        case 'QuadPower':
+            quadPower = !quadPower;
+            break;
+        case 'TriplePowerUp':
+            infiniteEnergy = true;
+            doublePower = true;
+            quadPower = true;
+            break;
     }
-
-    const powerUpDescription = {
-        'DayDone': 'Collect all bits available for the day.',
-        'Power': 'Increase power by 4 bits per click.',
-        'Energy': 'No cooldowns for the day.',
-        'NoSleep': 'Replenish all hearts for the day.'
-    };
-
-    const confirmPowerUp = confirm(`Are you sure you want to use the ${powerUp} power-up?\n\n${powerUpDescription[powerUp]}`);
-    if (confirmPowerUp) {
-        alert('You just powered up!');
-        selectedPowerUp = powerUp;
-        document.querySelectorAll('.power-up').forEach(pu => pu.classList.add('selected'));
-    }
+    closeModal('quest-modal');
 }
 
+// Mock leaderboard data
+const mockLeaderboard = [
+    { name: "Player1", bits: 1200 },
+    { name: "Player2", bits: 1100 },
+    { name: "Player3", bits: 1050 },
+    { name: "Player4", bits: 1000 },
+    { name: "Player5", bits: 950 },
+];
+
+// Function to populate mock leaderboard
+function populateLeaderboard() {
+    const dailyLeaderboard = document.getElementById('daily-leaderboard');
+    const allTimeLeaderboard = document.getElementById('all-time-leaderboard');
+    dailyLeaderboard.innerHTML = '';
+    allTimeLeaderboard.innerHTML = '';
+    mockLeaderboard.forEach(player => {
+        const playerElement = document.createElement('div');
+        playerElement.classList.add('leaderboard-user');
+        playerElement.textContent = `${player.name}: ${player.bits} bits`;
+        dailyLeaderboard.appendChild(playerElement);
+        allTimeLeaderboard.appendChild(playerElement.cloneNode(true));
+    });
+}
+
+// Mock squad data
+const mockSquadData = {
+    alphaquesters: { total: 12000, members: mockLeaderboard },
+    hamsters: { total: 11000, members: mockLeaderboard },
+    nothing: { total: 10500, members: mockLeaderboard },
+    stonfi: { total: 10000, members: mockLeaderboard },
+    evaa: { total: 9500, members: mockLeaderboard },
+};
+
+// Function to populate mock squads
+function populateSquads() {
+    Object.keys(mockSquadData).forEach(squad => {
+        const squadContainer = document.getElementById(`${squad}-leaderboard`);
+        squadContainer.innerHTML = '';
+        mockSquadData[squad].members.forEach(member => {
+            const memberElement = document.createElement('div');
+            memberElement.classList.add('leaderboard-user');
+            memberElement.textContent = `${member.name}: ${member.bits} bits`;
+            squadContainer.appendChild(memberElement);
+        });
+        document.getElementById(`${squad}-total`).textContent = mockSquadData[squad].total;
+    });
+}
+
+populateLeaderboard();
+populateSquads();
 updateWall();
 updateProgressBar();
 updateTotalBits();

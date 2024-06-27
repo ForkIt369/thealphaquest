@@ -12,7 +12,7 @@
             text-align: center;
             margin: 0;
             padding: 0;
-            background-color: #262626; /* General background color */
+            background-color: #262626;
             height: 100vh;
             display: flex;
             justify-content: center;
@@ -25,12 +25,12 @@
             height: 80vh;
             width: 90vw;
             max-width: 600px;
-            background-color: #161616; /* Module box background color */
+            background-color: #161616;
             border-radius: 10px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5); /* Enhanced shadow for better visual effect */
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
             padding: 20px;
             flex-direction: column;
-            position: relative; /* For positioning of blurred background */
+            position: relative;
         }
         #blur-overlay {
             position: absolute;
@@ -44,22 +44,22 @@
             z-index: 10;
         }
         #title {
-            font-size: 48px; /* Font size for the title */
-            color: #FE5F03; /* Color for the title */
+            font-size: 48px;
+            color: #FE5F03;
             margin-bottom: 20px;
             font-family: 'Pixelify Sans', sans-serif;
         }
         #message {
-            font-size: 24px; /* Large font for motivational messages */
-            color: #FE7F35; /* Color for motivational messages */
+            font-size: 24px;
+            color: #FE7F35;
             margin-bottom: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
         }
         #countdown {
-            font-size: 36px; /* Large font for countdown timer */
-            color: #FE5F03; /* Color for countdown timer */
+            font-size: 36px;
+            color: #FE5F03;
             margin-bottom: 10px;
             display: flex;
             align-items: center;
@@ -67,17 +67,29 @@
         }
         #total-bits {
             font-size: 16px;
-            background-color: #FFEFE6; /* Background color for total bits */
+            background-color: #FFEFE6;
             padding: 5px 10px;
             border-radius: 5px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             margin-bottom: 10px;
-            color: #7F3002; /* Text color */
+            color: #7F3002;
+        }
+        #total-tq {
+            font-size: 18px;
+            padding: 10px 15px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            margin-top: 10px;
+            color: #FE5F03;
+            transition: transform 0.3s;
+        }
+        #total-tq.enlarge {
+            transform: scale(1.2);
         }
         #progress-container {
             width: 20px;
             height: 300px;
-            background-color: #FFDFCD; /* Progress container background color */
+            background-color: #FFDFCD;
             border-radius: 5px;
             overflow: hidden;
             margin-right: 10px;
@@ -86,8 +98,8 @@
         }
         .progress-bar {
             width: 100%;
-            background-color: #FE5F03; /* Progress bar color */
-            height: 0; /* Initial height of the progress bar */
+            background-color: #FE5F03;
+            height: 0;
             transition: background-color 0.3s, height 0.3s;
         }
         #grid-wall {
@@ -101,10 +113,10 @@
         .bit {
             width: 14px;
             height: 13px;
-            background-color: #FE5F03; /* Orange color for bits */
+            background-color: #FE5F03;
         }
         .wall-bit {
-            background-color: #7F3002; /* Initial color of wall bits */
+            background-color: #7F3002;
         }
         #wall-container {
             display: flex;
@@ -112,26 +124,26 @@
             align-items: center;
         }
         #wall {
-            width: 150px; /* Increased size for click area */
-            height: 150px; /* Increased size for click area */
+            width: 150px;
+            height: 150px;
             background-size: cover;
             cursor: pointer;
             margin-bottom: 20px;
-            border: 2px solid #FE5F03; /* Border to highlight click area */
+            border: 2px solid #FE5F03;
             padding: 10px;
             transition: transform 0.1s, box-shadow 0.1s;
-            user-select: none; /* Prevent text selection */
+            user-select: none;
         }
         #wall img {
-            pointer-events: none; /* Prevent dragging the image */
+            pointer-events: none;
         }
         #wall:hover {
-            transform: scale(1.05); /* Slightly increase size on hover */
-            box-shadow: 0 0 10px #FE5F03; /* Add shadow on hover */
+            transform: scale(1.05);
+            box-shadow: 0 0 10px #FE5F03;
         }
         #wall:active {
-            transform: scale(0.95); /* Slightly decrease size on click */
-            box-shadow: 0 0 5px #FE5F03; /* Reduce shadow on click */
+            transform: scale(0.95);
+            box-shadow: 0 0 5px #FE5F03;
         }
         #grid-container {
             display: grid;
@@ -141,10 +153,10 @@
         }
         #energy-module {
             width: 320px;
-            background-color: #7F3002; /* Energy module background color */
+            background-color: #7F3002;
             border-radius: 5px;
             padding: 10px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5); /* Enhanced shadow */
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
             margin-top: 10px;
             display: flex;
             flex-direction: column;
@@ -153,7 +165,7 @@
         #energy-container {
             width: 300px;
             height: 20px;
-            background-color: #FFBF9A; /* Energy container background color */
+            background-color: #FFBF9A;
             border-radius: 5px;
             overflow: hidden;
             position: relative;
@@ -162,7 +174,7 @@
         #energy-bar {
             height: 100%;
             width: 100%;
-            background-color: #7F3002; /* Subtle background color */
+            background-color: #7F3002;
             transition: width 0.3s, background-color 0.3s;
         }
         #energy-icon {
@@ -175,32 +187,32 @@
         .placeholder {
             width: 100px;
             height: 40px;
-            background-color: #FFEFE6; /* Background color for placeholders */
+            background-color: #FFEFE6;
             padding: 5px 10px;
             border-radius: 5px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             margin: 5px;
             display: inline-block;
-            color: #7F3002; /* Text color for placeholders */
-            user-select: none; /* Prevent text selection */
-            cursor: pointer; /* Pointer cursor for buttons */
+            color: #7F3002;
+            user-select: none;
+            cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             text-align: center;
         }
         .placeholder:hover {
-            background-color: #FE9F68; /* Change background color on hover */
+            background-color: #FE9F68;
         }
         .placeholder:active {
-            background-color: #CB4C02; /* Change background color on click */
-            box-shadow: 0 0 5px #FE5F03; /* Add shadow on click */
+            background-color: #CB4C02;
+            box-shadow: 0 0 5px #FE5F03;
         }
         .break-button {
             background-color: #FE5F03;
             color: #FFF4E1;
         }
-        .quest-button {
+        .power-button {
             background-color: #763AF2;
             color: #FFF4E1;
         }
@@ -264,9 +276,9 @@
             cursor: pointer;
         }
         .quest {
-            background-color: #161616; /* Module box background color */
+            background-color: #161616;
             border-radius: 10px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5); /* Enhanced shadow */
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
             padding: 20px;
             margin-bottom: 20px;
             display: flex;
@@ -274,13 +286,13 @@
             align-items: center;
         }
         .quest-name {
-            color: #FFF4E1; /* Lighter color for quest name */
+            color: #FFF4E1;
         }
         .quest-bits {
-            color: #FFF4E1; /* Lighter color for quest bits */
+            color: #FFF4E1;
         }
         .earned-bits {
-            color: #3EB85F; /* Green hue for earned bits */
+            color: #3EB85F;
         }
         .tab-container {
             display: flex;
@@ -319,7 +331,7 @@
             padding: 10px;
             background-color: #1E1D1D;
             border-bottom: 1px solid #313130;
-            color: #FFF4E1; /* Lighter text color */
+            color: #FFF4E1;
         }
         .leaderboard-user:last-child {
             border-bottom: none;
@@ -359,7 +371,7 @@
             background-color: #1E1D1D;
             border-radius: 10px;
             padding: 20px;
-            color: #FFF4E1; /* Lighter text color */
+            color: #FFF4E1;
         }
     </style>
 </head>
@@ -383,10 +395,11 @@
                 <div id="energy-bar"></div>
             </div>
         </div>
+        <div id="total-tq">$TQ: 0</div>
         <div class="button-container" id="button-container" style="display: none;">
             <div class="placeholder break-button" onclick="startGame()">BREAK!</div>
-            <div class="placeholder quest-button" onclick="openModal('quest-modal')">🟣<br>Quest</div>
-            <div class="placeholder synergy-button" onclick="openModal('synergyboard-modal')">❎<br>Synergy</div>
+            <div class="placeholder power-button" onclick="openModal('quest-modal')">Power</div>
+            <div class="placeholder synergy-button" onclick="openModal('synergy-modal')">Synergy</div>
         </div>
         <div id="hearts-container">
             <!-- Hearts will be dynamically added here -->
@@ -397,43 +410,35 @@
     <div id="quest-modal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeModal('quest-modal')">&times;</span>
-            <h1>Quests</h1>
-            <div id="quests">
-                <!-- Quest modules will be dynamically added here -->
+            <h1>Power-Ups</h1>
+            <div class="power-up" onclick="selectPowerUp('InfiniteEnergy')">
+                Infinite Energy - Energy does not run out
             </div>
-            <h2>Power-Ups</h2>
-            <div class="power-up" onclick="selectPowerUp('DayDone')">
-                <img src="SVG/DayDone.svg" class="icon" />
-                <div>DayDone - Collect all bits available for the day</div>
+            <div class="power-up" onclick="selectPowerUp('DoublePower')">
+                Double Power - Collect twice as many bits
             </div>
-            <div class="power-up" onclick="selectPowerUp('Power')">
-                <img src="SVG/Power.svg" class="icon" />
-                <div>Power - Increase power by 4 bits per click</div>
+            <div class="power-up" onclick="selectPowerUp('QuadPower')">
+                Quad Power - Collect four times as many bits
             </div>
-            <div class="power-up" onclick="selectPowerUp('Energy')">
-                <img src="SVG/Energy.svg" class="icon" />
-                <div>Energy - No cooldowns for the day</div>
-            </div>
-            <div class="power-up" onclick="selectPowerUp('NoSleep')">
-                <img src="SVG/nosleep.svg" class="icon" />
-                <div>NoSleep - Replenish all hearts for the day</div>
+            <div class="power-up" onclick="selectPowerUp('TriplePowerUp')">
+                Triple Power Up - Infinite Energy + Double Power + Quad Power
             </div>
         </div>
     </div>
 
-    <!-- Synergy Board Modal -->
-    <div id="synergyboard-modal" class="modal">
+    <!-- Synergy Modal -->
+    <div id="synergy-modal" class="modal">
         <div class="modal-content">
-            <span class="close" onclick="closeModal('synergyboard-modal')">&times;</span>
+            <span class="close" onclick="closeModal('synergy-modal')">&times;</span>
             <div class="tab-container">
                 <div class="tab active" onclick="showTab('synergy')">Synergy</div>
                 <div class="tab" onclick="showTab('squads')">Squads</div>
             </div>
             <div id="synergy" class="tab-content">
                 <div id="invite-link" class="invite-button" onclick="showInviteLink()">
-                    <img src="SVG/synergy.svg" class="icon" />
-                    Invite Frens to Synergize!
+                    Invite Friend
                 </div>
+                <p>Invite a friend and both of you will receive a heart. This heart will increase your bit limit for the day!</p>
                 <div class="tab-container">
                     <div class="tab active" onclick="showLeaderboard('daily')">Daily</div>
                     <div class="tab" onclick="showLeaderboard('all-time')">All Time</div>
@@ -450,20 +455,12 @@
                         <!-- All Time leaderboard content will be dynamically added here -->
                     </div>
                 </div>
-                <div id="invite-modal" class="modal">
-                    <div class="modal-content">
-                        <span class="close" onclick="closeModal('invite-modal')">&times;</span>
-                        <h1>Invite Frens</h1>
-                        <p>Invite Frens. Break The Walls. You both share 25% of all Bits collected by each other.</p>
-                        <p>Your Invite Link: <span id="invite-link-url">https://example.com/invite?user=you</span></p>
-                    </div>
-                </div>
             </div>
             <div id="squads" class="tab-content" style="display:none;">
                 <div class="scroll-container">
                     <div class="tab active" onclick="showSquad('alphaquesters')">AlphaQuesters</div>
-                    <div class="tab" onclick="showSquad('hamsters')">🐹Hamsters</div>
-                    <div class="tab" onclick="showSquad('nothing')">ØNothing</div>
+                    <div class="tab" onclick="showSquad('hamsters')">Hamsters</div>
+                    <div class="tab" onclick="showSquad('nothing')">Nothing</div>
                     <div class="tab" onclick="showSquad('stonfi')">STONfi</div>
                     <div class="tab" onclick="showSquad('evaa')">Evaa</div>
                     <div class="tab" onclick="showSquad('storm')">Storm</div>
@@ -482,16 +479,16 @@
                     <p>Total Bits Collected: <span id="alphaquesters-total">0</span></p>
                 </div>
                 <div id="hamsters" class="squad-content" style="display:none;">
-                    <h3>🐹Hamsters - Top 100</h3>
+                    <h3>Hamsters - Top 100</h3>
                     <div id="hamsters-leaderboard">
                         <!-- Hamsters leaderboard content will be dynamically added here -->
                     </div>
                     <p>Total Bits Collected: <span id="hamsters-total">0</span></p>
                 </div>
                 <div id="nothing" class="squad-content" style="display:none;">
-                    <h3>ØNothing - Top 100</h3>
+                    <h3>Nothing - Top 100</h3>
                     <div id="nothing-leaderboard">
-                        <!-- ØNothing leaderboard content will be dynamically added here -->
+                        <!-- Nothing leaderboard content will be dynamically added here -->
                     </div>
                     <p>Total Bits Collected: <span id="nothing-total">0</span></p>
                 </div>
