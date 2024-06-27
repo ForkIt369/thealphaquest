@@ -1,8 +1,8 @@
 import os
-from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.ext import Updater, CommandHandler, CallbackContext, CallbackQueryHandler
+from telegram import Update
+from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 from flask import Flask, request
-from sqlalchemy import create_engine, Column, Integer, String, Date, Boolean
+from sqlalchemy import create_engine, Column, Integer, String, Date
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from datetime import datetime, timedelta
@@ -31,11 +31,11 @@ app = Flask(__name__)
 
 @app.route(f'/{TOKEN}', methods=['POST'])
 def webhook():
-    update = Update.de_json(request.get_json(), updater.bot)
-    dp.process_update(update)
+    update = Update.de_json(request.get_json(), application.bot)
+    application.update_queue.put(update)
     return 'ok'
 
-def start(update: Update, context: CallbackContext) -> None:
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     user = update.message.from_user
     existing_user = session.query(User).filter_by(telegram_id=user.id).first()
 
@@ -47,18 +47,18 @@ def start(update: Update, context: CallbackContext) -> None:
         )
         session.add(new_user)
         session.commit()
-        update.message.reply_text(f"Welcome {user.username}! You have started your journey with 0 score.")
+        await update.message.reply_text(f"Welcome {user.username}! You have started your journey with 0 score.")
     else:
-        update.message.reply_text(f"Welcome back {user.username}! Your current score is {existing_user.score}.")
+        await update.message.reply_text(f"Welcome back {user.username}! Your current score is {existing_user.score}.")
 
-def check_in(update: Update, context: CallbackContext) -> None:
+async def check_in(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     user = update.message.from_user
     existing_user = session.query(User).filter_by(telegram_id=user.id).first()
 
     if existing_user:
         today = datetime.now().date()
         if existing_user.last_login == today:
-            update.message.reply_text("You have already checked in today.")
+            await update.message.reply_text("You have already checked in today.")
             return
 
         if existing_user.last_login == today - timedelta(days=1):
@@ -69,28 +69,29 @@ def check_in(update: Update, context: CallbackContext) -> None:
         existing_user.last_login = today
         existing_user.score += 10 * existing_user.streak  # Example scoring
         session.commit()
-        update.message.reply_text(f"Checked in! Your current streak is {existing_user.streak}. Your score is {existing_user.score}.")
+        await update.message.reply_text(f"Checked in! Your current streak is {existing_user.streak}. Your score is {existing_user.score}.")
     else:
-        update.message.reply_text("You need to start first. Use /start to register.")
+        await update.message.reply_text("You need to start first. Use /start to register.")
 
-def invite(update: Update, context: CallbackContext) -> None:
+async def invite(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     user = update.message.from_user
     invite_link = f"https://t.me/thealphaquest_bot?start={user.id}"
-    update.message.reply_text(f"Invite your friends using this link: {invite_link}")
+    await update.message.reply_text(f"Invite your friends using this link: {invite_link}")
 
 def main():
-    global updater, dp
-    updater = Updater(TOKEN, use_context=True)
-    dp = updater.dispatcher
+    global application
+    application = ApplicationBuilder().token(TOKEN).build()
 
-    dp.add_handler(CommandHandler("start", start))
-    dp.add_handler(CommandHandler("checkin", check_in))
-    dp.add_handler(CommandHandler("invite", invite))
+    application.add_handler(CommandHandler("start", start))
+    application.add_handler(CommandHandler("checkin", check_in))
+    application.add_handler(CommandHandler("invite", invite))
 
-    updater.start_webhook(listen="0.0.0.0", port=int(os.environ.get('PORT', 5000)), url_path=TOKEN)
-    updater.bot.setWebhook(APP_URL)
-    updater.idle()
+    application.run_webhook(
+        listen="0.0.0.0",
+        port=int(os.environ.get('PORT', 5000)),
+        url_path=TOKEN,
+        webhook_url=APP_URL
+    )
 
 if __name__ == '__main__':
     main()
-b
